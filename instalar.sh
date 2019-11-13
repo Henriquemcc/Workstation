@@ -82,7 +82,7 @@
     echo "(13/14)Instalando o Stubby";
     sudo netstat -lnptu | grep stubby;
     sudo netstat -lnptu | grep systemd-resolve;
-    sudo cp ../../x-special/stubby.yml etc/stubby/stubby.yml;
+    sudo cp ./x-special/stubby.yml /etc/stubby/stubby.yml;
 
     #Removendo programas inuteis
     echo "(14/14)Desinstalando programas inuteis";
