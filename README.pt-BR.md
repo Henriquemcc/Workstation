@@ -7,4 +7,6 @@ Este é o script de instalação dos meus programas em minha máquina com Ubuntu
 
 2- Na pasta deste arquivo abra o terminal e execute o seguinte comando: 
 
+```
 sudo bash ./instalar.sh
+```
