@@ -54,6 +54,7 @@
     sudo snap install code --classic;
     sudo flatpak install https://flathub.org/repo/appstream/org.gimp.GIMP.flatpakref -y;
     sudo snap install --devmode keepassxc;
+    sudo flatpak install flathub com.google.AndroidStudio
 
     #Instalando o Youtube-dl
     echo "(09/14)Instalando o Youtube-dl";
