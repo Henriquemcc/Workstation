@@ -1,0 +1,2 @@
+#!/bin/sh
+cp -f /etc/resolv.conf.override /run/resolvconf/resolv.conf
