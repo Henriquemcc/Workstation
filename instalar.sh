@@ -33,7 +33,7 @@
         echo "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" | sudo tee -a /etc/apt/sources.list.d/signal-xenial.list
         
         #Kdenlive
-        sudo add-apt-repository ppa:kdenlive/kdenlive-stable -y;
+        #sudo add-apt-repository ppa:kdenlive/kdenlive-stable -y;
 
     #Atualizando as listas de repositórios
     echo "(04/14)Atualizando a lista de repositorios";
