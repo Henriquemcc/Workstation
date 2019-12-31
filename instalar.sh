@@ -79,9 +79,13 @@
     #Configurando o Java
     echo "(11/14)Configurando o Java";
     sudo update-java-alternatives --set java-1.8.0-openjdk-amd64;
+    
+    #Configurando o Python
+    echo "(12/14)Configurando o Python";
+    sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 0;
 
     #Instalando o logisim
-    echo "(12/14)Instalando o Logisim";
+    echo "(13/14)Instalando o Logisim";
     sudo mv /usr/share/logisim/logisim.jar /usr/share/logisim/logisim.jar.old;
     sudo wget https://raw.githubusercontent.com/LogisimIt/Logisim/master/Compiled/Logisim-ITA.jar# -O /usr/share/logisim/logisim.jar;
     sudo chmod a+x /usr/share/logisim/logisim.jar;
