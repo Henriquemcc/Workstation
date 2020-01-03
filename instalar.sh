@@ -81,8 +81,8 @@
     sudo update-java-alternatives --set java-1.8.0-openjdk-amd64;
     
     #Configurando o Python
-    echo "(12/14)Configurando o Python";
-    sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 0;
+    #echo "(12/14)Configurando o Python";
+    #sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 0;
 
     #Instalando o logisim
     echo "(13/14)Instalando o Logisim";
