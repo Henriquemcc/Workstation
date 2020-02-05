@@ -52,7 +52,7 @@
 
     #Baixando e Instalando os pacotes apt
     echo "(06/14)Instalando os pacotes pelo grenciador de pacotes APT";
-    sudo apt install virtualbox virtualbox-ext-pack google-chrome-stable cinnamon-desktop-environment flatpak gnome-software-plugin-flatpak make simplescreenrecorder ubuntu-make redshift libreoffice evince alien pulseaudio* codeblocks audacity gpp gcc fp-compiler brasero soundconverter asunder blueman steam ubuntu-report exfat-utils nautilus* file-roller gnome-disk-utility usb-creator-gtk transmission-gtk samba flashplugin-installer ttf-mscorefonts-installer lib32z1 lib32stdc++6 linux-headers-$(uname -r) dkms git gradle gufw ca-certificates-java chrome-gnome-shell libc6:i386 libncurses5:i386 libstdc++6:i386 libbz2-1.0:i386 browser-plugin-freshplayer-pepperflash unrar unrar-free okular p7zip-full ffmpeg libuchardet0 mpv phantomjs python3-pyxattr rtmpdump bluetooth tlp vim* openjdk-8-jdk openjdk-8-jre libsdl-ttf2.0-0 vlc virtualbox-guest-additions-iso logisim libcanberra-gtk-module libcanberra-gtk3-module iverilog arduino bless openvpn network-manager-openvpn-gnome resolvconf gpa ./Minecraft.deb ./veracrypt-1.24-Hotfix1-Ubuntu-19.10-amd64.deb signal-desktop kdenlive obs-studio python-pip dotnet-sdk-3.1 mysql-server mysql-client google-earth-pro-stable -y;
+    sudo apt install virtualbox virtualbox-ext-pack google-chrome-stable cinnamon-desktop-environment flatpak gnome-software-plugin-flatpak make simplescreenrecorder ubuntu-make redshift libreoffice evince alien pulseaudio* codeblocks audacity gpp gcc fp-compiler brasero soundconverter asunder blueman steam ubuntu-report exfat-utils nautilus* file-roller gnome-disk-utility usb-creator-gtk transmission-gtk samba flashplugin-installer ttf-mscorefonts-installer lib32z1 lib32stdc++6 linux-headers-$(uname -r) dkms git gradle gufw ca-certificates-java chrome-gnome-shell libc6:i386 libncurses5:i386 libstdc++6:i386 libbz2-1.0:i386 browser-plugin-freshplayer-pepperflash unrar unrar-free okular p7zip-full ffmpeg libuchardet0 mpv phantomjs python3-pyxattr rtmpdump bluetooth tlp vim* openjdk-8-jdk openjdk-8-jre libsdl-ttf2.0-0 vlc virtualbox-guest-additions-iso logisim libcanberra-gtk-module libcanberra-gtk3-module iverilog arduino bless openvpn network-manager-openvpn-gnome resolvconf gpa ./Minecraft.deb ./veracrypt-1.24-Hotfix1-Ubuntu-19.10-amd64.deb signal-desktop kdenlive obs-studio python-pip dotnet-sdk-3.1 mysql-server mysql-client google-earth-pro-stable stubby -y;
 
     #Instalando o flathub
     echo "(07/14)Instalando o repositorio flathub";
@@ -82,32 +82,21 @@
     sudo fc-cache;
     sudo fc-match Arial;
     
-
     #Configurando o Java
     echo "(11/14)Configurando o Java";
     sudo update-java-alternatives --set java-1.8.0-openjdk-amd64;
-    
-    #Configurando o Python
-    #echo "(12/14)Configurando o Python";
-    #sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 0;
 
     #Instalando o logisim
-    echo "(13/14)Instalando o Logisim";
+    echo "(12/14)Instalando o Logisim";
     sudo mv /usr/share/logisim/logisim.jar /usr/share/logisim/logisim.jar.old;
     sudo wget https://raw.githubusercontent.com/LogisimIt/Logisim/master/Compiled/Logisim-ITA.jar# -O /usr/share/logisim/logisim.jar;
     sudo chmod a+x /usr/share/logisim/logisim.jar;
 
-    #Instalando o DnsCrypy
-    #echo "(13/14)Instalando o DnsCrypt";
-    #sudo cp ./NetworkManager.conf /etc/NetworkManager/NetworkManager.conf;
-    #sudo cp /etc/dnscrypt-proxy/dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml.original  # non-idempotent
-    #sudo cp ./dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml
-    #sudo cp ./resolv.conf.override /etc/resolv.conf.override
-    #sudo cp ./20-resolv-conf-override /etc/NetworkManager/dispatcher.d/20-resolv-conf-override
-    #sudo ln -f /etc/NetworkManager/dispatcher.d/20-resolv-conf-override /etc/NetworkManager/dispatcher.d/pre-up.d/
-    #sudo systemctl restart NetworkManager
-    #sudo systemctl restart dnscrypt-proxy
-
+    #Instalando o Stubby
+    echo "(13/14)Instalando o Stubby";
+    sudo netstat -lnptu | grep stubby;
+    sudo netstat -lnptu | grep systemd-resolve;
+    sudo cp ./stubby.yml /etc/stubby/stubby.yml;
 
     #Removendo programas inuteis
     echo "(14/14)Desinstalando programas inuteis";
