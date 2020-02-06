@@ -12,4 +12,4 @@ sudo bash ./instalar.sh
 ```
 # Uso:
 
-O script está licenciado sobre licença [MIT](https://github.com/Henriquemcc/Workstation_com_Ubuntu/blob/master/LICENSE).
+O script está licenciado sobre [Licença MIT](https://github.com/Henriquemcc/Workstation_com_Ubuntu/blob/master/LICENSE).
