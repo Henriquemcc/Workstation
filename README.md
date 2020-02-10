@@ -1,3 +1,5 @@
+[English Version](https://github.com/Henriquemcc/Workstation_com_Ubuntu/blob/master/README.EN.md)
+
 # Workstation
 Este é o script de instalação dos meus programas em minha máquina com Ubuntu.
 
