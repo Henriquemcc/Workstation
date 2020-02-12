@@ -29,7 +29,7 @@
         wget https://launcher.mojang.com/download/Minecraft.deb;
 
         #Veracrypt
-        wget https://launchpad.net/veracrypt/trunk/1.24-hotfix1/+download/veracrypt-1.24-Hotfix1-Ubuntu-19.10-amd64.deb;
+        wget https://launchpad.net/veracrypt/trunk/1.24-update4/+download/veracrypt-1.24-Update4-Ubuntu-18.04-amd64.deb;
         
         #Signal
         curl -s https://updates.signal.org/desktop/apt/keys.asc | sudo apt-key add -
