@@ -104,6 +104,9 @@
     echo "(15/15)Desinstalando programas inuteis";
     sudo apt autoremove aisleriot five-or-more hitori iagno gnome-klotski lightsoff gnome-mahjongg gnome-mines gnome-nibbles quadrapassel four-in-a-row gnome-robots gnome-sudoku swell-foop tali gnome-taquin gnome-tetravex gnome-chess -y; 
     sudo apt autoclean -y;
+    
+    #Criando alias
+    alias update='sudo apt update && sudo apt full-upgrade -y && sudo snap refresh && flatpak update -y';
 
     #Saindo do terminal
     echo "Instalacao concluida!";
