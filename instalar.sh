@@ -106,7 +106,7 @@
     sudo apt autoclean -y;
     
     #Criando alias
-    echo "alias update='sudo apt update && sudo apt full-upgrade -y && sudo snap refresh && flatpak update -y'" | tee -a ~/.bashrc;
+    echo "alias update='sudo apt update && sudo apt full-upgrade -y && sudo snap refresh && flatpak update -y && sudo ubuntu-drivers autoinstall'" | tee -a ~/.bashrc;
 
     #Saindo do terminal
     echo "Instalacao concluida!";
