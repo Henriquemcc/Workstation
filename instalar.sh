@@ -5,6 +5,7 @@
 
     #Instalando prérequisitos
     echo "(01/12)Instalando os softwares prerequisitos";
+    sudo apt-get update;
     sudo apt-get install curl apt-transport-https snapd apt -y;
 
     #Atualizando o sistema
