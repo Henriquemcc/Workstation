@@ -2,6 +2,13 @@
 #Para o Ubuntu 20
 
 #[Inicio do Programa]
+    #Verificando se eh root
+    usuario=$(whoami);
+    if [ "$usuario" != "root" ]
+    then
+        echo "Erro: Este shell script nao esta sendo executado como root";
+        exit 1;
+    fi;
 
     #Alterando o mirror do ubuntu
     echo "(01/16)Alterando o mirror do Ubuntu";
