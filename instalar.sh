@@ -103,27 +103,8 @@
     echo "(15/16)Configurando o Visual Studio Code";
     echo 'fs.inotify.max_user_watches=524288' | sudo tee /etc/sysctl.conf;
     sudo sysctl -p;
-    sudo -u "$SUDO_USER" code --install-extension NathanRidley.autotrim;
-    sudo -u "$SUDO_USER" code --install-extension ms-vscode.cpptools;
-    sudo -u "$SUDO_USER" code --install-extension ms-dotnettools.csharp;
-    sudo -u "$SUDO_USER" code --install-extension austin.code-gnu-global;
-    sudo -u "$SUDO_USER" code --install-extension ms-vscode.cmake-tools;
-    sudo -u "$SUDO_USER" code --install-extension firefox-devtools.vscode-firefox-debug;
-    sudo -u "$SUDO_USER" code --install-extension vscjava.vscode-java-debug;
-    sudo -u "$SUDO_USER" code --install-extension dbaeumer.vscode-eslint;
-    sudo -u "$SUDO_USER" code --install-extension GitHub.github-vscode-theme;
-    sudo -u "$SUDO_USER" code --install-extension ecmel.vscode-html-css;
-    sudo -u "$SUDO_USER" code --install-extension mythmon.idl;
-    sudo -u "$SUDO_USER" code --install-extension vscjava.vscode-java-dependency;
-    sudo -u "$SUDO_USER" code --install-extension vscjava.vscode-java-pack;
-    sudo -u "$SUDO_USER" code --install-extension vscjava.vscode-java-test;
-    sudo -u "$SUDO_USER" code --install-extension redhat.java;
-    sudo -u "$SUDO_USER" code --install-extension DavidAnson.vscode-markdownlint;
-    sudo -u "$SUDO_USER" code --install-extension vscjava.vscode-maven;
-    sudo -u "$SUDO_USER" code --install-extension esbenp.prettier-vscode;
-    sudo -u "$SUDO_USER" code --install-extension rust-lang.rust;
-    sudo -u "$SUDO_USER" code --install-extension VisualStudioExptTeam.vscodeintellicode;
-    sudo -u "$SUDO_USER" code --install-extension ms-ceintl.vscode-language-pack-pt-br;
+    sudo -u "$SUDO_USER" bash ./instalarExtensoesVisualStudioCode.sh;
+    git config --global core.editor "code --wait";
 
     #Criando alias
     echo "(16/16)Criando alias";
