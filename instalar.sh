@@ -1,14 +1,6 @@
 #!/bin/bash
 #Para o Ubuntu 20
 
-    #Verificando se eh root
-    usuario=$(whoami);
-    if [ "$usuario" != "root" ]
-    then
-        echo "Erro: Este shell script nao esta sendo executado como root";
-        exit 1;
-    fi;
-
     #Alterando o mirror do ubuntu
     echo "(01/16)Alterando o mirror do Ubuntu";
     sudo mv /etc/apt/sources.list /etc/apt/sources.list.old;
@@ -105,7 +97,7 @@
     echo "(15/16)Configurando o Visual Studio Code";
     echo 'fs.inotify.max_user_watches=524288' | sudo tee /etc/sysctl.conf;
     sudo sysctl -p;
-    sudo -u "$SUDO_USER" bash ./instalarExtensoesVisualStudioCode.sh;
+    bash ./instalarExtensoesVisualStudioCode.sh;
     git config --global core.editor "code --wait";
 
     #Criando alias
