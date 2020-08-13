@@ -21,10 +21,10 @@
         
         #Google Chrome
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -;
-        echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list;
+        echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main' | sudo tee --append /etc/apt/sources.list.d/google-chrome.list;
         
         #Google Earth
-        echo 'deb [arch=amd64] https://dl.google.com/linux/earth/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-earth-pro.list;
+        echo 'deb [arch=amd64] https://dl.google.com/linux/earth/deb/ stable main' | sudo tee --append /etc/apt/sources.list.d/google-earth-pro.list;
 
         #Baixando o Minecraft
         wget https://launcher.mojang.com/download/Minecraft.deb;
@@ -34,7 +34,7 @@
         
         #Signal
         curl -s https://updates.signal.org/desktop/apt/keys.asc | sudo apt-key add -
-        echo "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" | sudo tee -a /etc/apt/sources.list.d/signal-xenial.list
+        echo "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" | sudo tee --append /etc/apt/sources.list.d/signal-xenial.list
         
         #.NET Core SDK
         wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb;
@@ -68,10 +68,19 @@
     sudo snap install code --classic;
     sudo snap install --devmode keepassxc;
     sudo snap install --classic android-studio;
+    sudo snap install pycharm-community --classic;
 
-    #Baixando e Instalando os pacotes flatpak
-    echo "(10/17)Instalando pacotes flatpak";
-
+    #Instalando o compilador de Rust Lang e Go Lang
+    echo "(10/17)Instalando o compilador de Rust Lang e Go Lang";
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;
+    curl -L -O https://dl.google.com/go/go1.15.linux-amd64.tar.gz;
+    tar -xvzf go1.15.linux-amd64.tar.gz;
+    sudo chown -R root:root ./go;
+    sudo mv go /usr/local;
+    echo "export GOPATH=$HOME/go" |tee --append ~/.profile;
+    echo "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin" |tee --append ~/.profile;
+    source ~/.profile;
+    
     #Instalando fontes
     echo "(11/17)Instalando as fontes";
     sudo fc-cache;
@@ -101,15 +110,15 @@
 
     #Configurando o Visual Studio Code
     echo "(16/17)Configurando o Visual Studio Code";
-    echo 'fs.inotify.max_user_watches=524288' | sudo tee /etc/sysctl.conf;
+    echo 'fs.inotify.max_user_watches=524288' | sudo tee --append /etc/sysctl.conf;
     sudo sysctl -p;
     bash ./instalarExtensoesVisualStudioCode.sh;
     git config --global core.editor "code --wait";
 
     #Criando alias
     echo "(17/17)Criando alias";
-    echo "alias update='sudo apt update && sudo apt full-upgrade -y && sudo snap refresh && flatpak update -y &&  sudo ubuntu-drivers autoinstall && sudo do-release-upgrade'" | tee -a ~/.bashrc;
-    echo "alias reload-sound='sudo apt update;sudo apt full-upgrade -y;sudo apt install --reinstall alsa-base alsa-utils alsa-tools-gui alsa-topology-conf alsa-ucm-conf bluedevil gir1.2-cvc-1.0 gir1.2-rb-3.0 gstreamer1.0-libav gstreamer1.0-nice gstreamer1.0-packagekit gstreamer1.0-pulseaudio indicator-sound libao-common libao4 libasound2-plugins libbasicusageenvironment1 libcanberra-pulse libkf5pulseaudioqt2 libpulse-mainloop-glib0 libpulse0 libpulsedsp lightdm linux-image-`uname -r` linux-sound-base pavucontrol pulseaudio pulseaudio-equalizer pulseaudio-module-bluetooth pulseaudio-module-jack pulseaudio-module-lirc pulseaudio-module-raop pulseaudio-module-zeroconf pulseaudio-utils python3-libdiscid speech-dispatcher-audio-plugins ubuntu-desktop ubuntu-sounds -y;sudo bash ./Fix_Bluetooth.sh;killall pulseaudio;rm -r ~/.pulse*;ubuntu-support-status;sudo usermod -aG `cat /etc/group | grep -e '^pulse:' -e '^audio:' -e '^pulse-access:' -e '^pulse-rt:' -e '^video:' | awk -F: '{print $1}' | tr '\n' ',' | sed 's:,$::g'` `whoami`;sudo pulseaudio -k;sudo alsa force-reload;'" | tee -a ~/.bashrc;
+    echo "alias update='sudo apt update && sudo apt full-upgrade -y && sudo snap refresh && flatpak update -y &&  sudo ubuntu-drivers autoinstall && sudo do-release-upgrade'" | tee --append ~/.bashrc;
+    echo "alias reload-sound='sudo apt update;sudo apt full-upgrade -y;sudo apt install --reinstall alsa-base alsa-utils alsa-tools-gui alsa-topology-conf alsa-ucm-conf bluedevil gir1.2-cvc-1.0 gir1.2-rb-3.0 gstreamer1.0-libav gstreamer1.0-nice gstreamer1.0-packagekit gstreamer1.0-pulseaudio indicator-sound libao-common libao4 libasound2-plugins libbasicusageenvironment1 libcanberra-pulse libkf5pulseaudioqt2 libpulse-mainloop-glib0 libpulse0 libpulsedsp lightdm linux-image-`uname -r` linux-sound-base pavucontrol pulseaudio pulseaudio-equalizer pulseaudio-module-bluetooth pulseaudio-module-jack pulseaudio-module-lirc pulseaudio-module-raop pulseaudio-module-zeroconf pulseaudio-utils python3-libdiscid speech-dispatcher-audio-plugins ubuntu-desktop ubuntu-sounds -y;sudo bash ./Fix_Bluetooth.sh;killall pulseaudio;rm -r ~/.pulse*;ubuntu-support-status;sudo usermod -aG `cat /etc/group | grep -e '^pulse:' -e '^audio:' -e '^pulse-access:' -e '^pulse-rt:' -e '^video:' | awk -F: '{print $1}' | tr '\n' ',' | sed 's:,$::g'` `whoami`;sudo pulseaudio -k;sudo alsa force-reload;'" | tee --append ~/.bashrc;
 
     #Saindo do terminal
     echo "Instalacao concluida!";
