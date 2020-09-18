@@ -4,7 +4,7 @@
 function alterarMirror
 {
     sudo mv /etc/apt/sources.list ~/sources.list.old;
-    sudo chmod 660 ~/sources.list.old;
+    sudo chmod 666 ~/sources.list.old;
     sudo cp ./sources.list /etc/apt/sources.list;
 }
 
@@ -136,7 +136,7 @@ function desinstalarProgramasInuteis
 function configurarAtualizacoesAutomaticas
 {
     sudo mv /etc/apt/apt.conf.d/50unattended-upgrades ~/50unattended-upgrades.old;
-    sudo chmod 660 ~/50unattended-upgrades.old;
+    sudo chmod 666 ~/50unattended-upgrades.old;
     sudo cp ./50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades;
 }
 
