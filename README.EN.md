@@ -8,7 +8,7 @@ This is the install script for my programs on my Ubuntu machine.
 1- Open the terminal and run the following command:
 
 ```
-sudo apt install unzip -y;wget https://github.com/Henriquemcc/Workstation_com_Ubuntu/archive/master.zip -O master.zip;unzip ./master.zip;cd ./Workstation_com_Ubuntu-master/;bash ./instalar.sh;
+sudo apt-get install unzip python3 -y;wget https://github.com/Henriquemcc/Workstation_com_Ubuntu/archive/master.zip -O master.zip;unzip ./master.zip;cd ./Workstation_com_Ubuntu-master/;python3 ./instalar.py;
 ```
 # Usage
 
