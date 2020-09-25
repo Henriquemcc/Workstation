@@ -1,5 +1,8 @@
 import subprocess
 import sys
+import os
+from os.path import expanduser
+import re
 
 
 def executar_comandos_shell(comandos_shell: []):
@@ -173,17 +176,36 @@ def instalar_go_lang():
     """
     Esta funcao serve para instalar o compilador da linguagem Go.
     """
+
+    # Verificando se o diretorio go existe na pasta /usr/local
+    if os.path.isdir("/usr/local/go"):
+        executar_comando_shell_sem_erro("sudo rm -rf /usr/local/go")
+
+    # Verificando se a pasta go existe no diretorio atual
+    if os.path.isdir("./go"):
+        executar_comando_shell_sem_erro("sudo rm -rf ./go")
+
+    # Instalando o Go
     comandos = \
         [
             "curl -L -O https://dl.google.com/go/go1.15.linux-amd64.tar.gz;",
             "tar -xvzf go1.15.linux-amd64.tar.gz;",
             "sudo chown -R root:root ./go;",
-            "sudo mv go /usr/local;",
-            "echo \"export GOPATH=$HOME/go\" |tee --append ~/.profile;",
-            "echo \"export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin\" |tee --append ~/.profile;",
-            "source ~/.profile;"
+            "sudo mv go /usr/local;"
         ]
     executar_comandos_shell(comandos)
+
+    # Adicionando o Go ao arquivo profile
+    home = expanduser("~")
+    with open(home + "/.profile") as profile:
+        if not "GOPATH" in profile:
+            executar_comando_shell_sem_erro("echo \"export GOPATH=$HOME/go\" |tee --append ~/.profile;")
+
+        for linha in profile:
+            if re.search("export PATH=|(?=:/usr/local/go/bin:)|(?=:/go/bin).*?", linha) is None:
+                executar_comando_shell_sem_erro(
+                    "echo \"export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin\" |tee --append ~/.profile;")
+                break
 
 
 def instalar_rust_lang():
