@@ -188,8 +188,8 @@ def instalar_go_lang():
     # Instalando o Go
     comandos = \
         [
-            "curl -L -O https://dl.google.com/go/go1.15.linux-amd64.tar.gz;",
-            "tar -xvzf go1.15.linux-amd64.tar.gz;",
+            "curl -L -O https://dl.google.com/go/go1.15.3.linux-amd64.tar.gz;",
+            "tar -xvzf go1.15.3.linux-amd64.tar.gz;",
             "sudo chown -R root:root ./go;",
             "sudo mv go /usr/local;"
         ]
