@@ -95,9 +95,7 @@ def instalar_programas_deb():
 
     comandos = \
         [
-            # Baixando
-
-            # Minecraft: Não será baixado e nem instalado
+            # Minecraft
             "wget https://launcher.mojang.com/download/Minecraft.deb;",
 
             # Veracrypt
@@ -107,7 +105,6 @@ def instalar_programas_deb():
             "sudo apt install ./veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb ./Minecraft.deb -y;",
 
             # Movendo instaladores para a lixeira
-            "gio trash ./packages-microsoft-prod.deb",
             "gio trash ./veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb",
             "gio trash ./Minecraft.deb"
         ]
@@ -135,7 +132,10 @@ def instalar_dot_net_sdk():
             "sudo apt update;",
 
             # Instalando o .NET SDK
-            "sudo apt install dotnet-sdk-5.0 aspnetcore-runtime-5.0 dotnet-runtime-5.0 -y;"
+            "sudo apt install dotnet-sdk-5.0 aspnetcore-runtime-5.0 dotnet-runtime-5.0 -y;",
+
+            # Movendo o arquivo packages-microsoft-prod.deb para a lixeira
+            "gio trash ./packages-microsoft-prod.deb",
         ]
 
     executar_comandos_shell(comandos)
