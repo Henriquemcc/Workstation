@@ -9,7 +9,7 @@ def verificar_versao_sistema_operacional():
     Verifica a versão do sistema operacional que está sendo executado. Caso o sistema operacional não seja compatível com este script, uma exceção é lançada
     """
     os_release = lsb_release.get_os_release()
-    if os_release['RELEASE'] != '20.04' or os_release['ID'] != 'Ubuntu':
+    if os_release['RELEASE'] != '20.10' or os_release['ID'] != 'Ubuntu':
         raise OSError("Versão de sistema operacional incompatível")
 
 
@@ -101,14 +101,13 @@ def instalar_programas_deb():
             "wget https://launcher.mojang.com/download/Minecraft.deb;",
 
             # Veracrypt
-            "wget https://launchpad.net/veracrypt/trunk/1.24-update7/+download/veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb;",
+            "wget https://launchpad.net/veracrypt/trunk/1.24-update7/+download/veracrypt-1.24-Update7-Ubuntu-20.10-amd64.deb;",
 
             # Instalando programas
-            "sudo apt install ./veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb ./Minecraft.deb -y;",
+            "sudo apt install ./veracrypt-1.24-Update7-Ubuntu-20.10-amd64.deb ./Minecraft.deb -y;",
 
             # Movendo instaladores para a lixeira
-            "gio trash ./packages-microsoft-prod.deb",
-            "gio trash ./veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb",
+            "gio trash ./veracrypt-1.24-Update7-Ubuntu-20.10-amd64.deb",
             "gio trash ./Minecraft.deb"
         ]
     executar_comandos_shell(comandos)
@@ -135,7 +134,10 @@ def instalar_dot_net_sdk():
             "sudo apt update;",
 
             # Instalando o .NET SDK
-            "sudo apt install dotnet-sdk-5.0 aspnetcore-runtime-5.0 dotnet-runtime-5.0 -y;"
+            "sudo apt install dotnet-sdk-5.0 aspnetcore-runtime-5.0 dotnet-runtime-5.0 -y;",
+
+            # Movendo o packages-microsoft-prod.deb para a lixeira
+            "gio trash ./packages-microsoft-prod.deb"
         ]
 
     executar_comandos_shell(comandos)
