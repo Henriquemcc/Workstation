@@ -14,4 +14,4 @@ sudo apt-get install unzip python3 -y;wget https://github.com/Henriquemcc/Workst
 ```
 # Uso:
 
-O script está licenciado sobre [Licença MIT](./LICENSE).
+O script está licenciado sobre [European Union Public License 1.2](./LICENSE).

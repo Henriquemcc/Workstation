@@ -1,23 +1,33 @@
 import subprocess
 import sys
-import os
-from os.path import expanduser
-import re
 
-def executar_comandos_shell(comandos_shell: []):
+import lsb_release
+
+
+def verificar_versao_sistema_operacional():
     """
-    Esta funcao serve para executar uma sequencia de comandos shell.
+    Verifica a versão do sistema operacional que está sendo executado. Caso o sistema operacional não seja compatível com este script, uma exceção é lançada
+    """
+    os_release = lsb_release.get_os_release()
+    if os_release['RELEASE'] != '20.04' or os_release['ID'] != 'Ubuntu':
+        raise OSError("Versão de sistema operacional incompatível")
+
+
+def executar_comandos_shell(comandos_shell: [], numero_maximo_de_repeticoes: int = 5):
+    """
+    Executa uma sequencia de comandos shell
     :param comandos_shell: Lista de comandos shell a serem executados.
+    :param numero_maximo_de_repeticoes: Numero maximo de repetições do comando antes que o programa aborte
     """
     for comando_shell in comandos_shell:
-        executar_comando_shell_sem_erro(comando_shell)
+        executar_comando_shell_sem_erro(comando_shell, numero_maximo_de_repeticoes)
 
 
 def executar_comando_shell_sem_erro(comando: str, numero_maximo_de_repeticoes: int = 5):
     """
-    Este metodo serve para executar um comando shell repetindo, caso ocorra algum erro.
-    :param comando: Comando shell que sera executado.
-    :param numero_maximo_de_repeticoes: Numero maximo de repeticoes do comando antes que o programa aborte.
+    Executa um comando shell repetindo, caso ocorra algum erro
+    :param comando: Comando shell que sera executado
+    :param numero_maximo_de_repeticoes: Numero maximo de repetições do comando antes que o programa aborte
     """
     print(comando)
     repetir = True
@@ -34,22 +44,9 @@ def executar_comando_shell_sem_erro(comando: str, numero_maximo_de_repeticoes: i
         sys.exit(-1)
 
 
-def alterar_mirror():
-    """
-    Esta funcao serve para alterar o servidor mirror do Ubuntu.
-    """
-    comandos = \
-        [
-            "sudo mv /etc/apt/sources.list ~/sources.list.old;",
-            "sudo chmod 666 ~/sources.list.old;",
-            "sudo cp ./sources.list /etc/apt/sources.list;"
-        ]
-    executar_comandos_shell(comandos)
-
-
 def instalar_prerequisitos():
     """
-    Esta funcao serve para instalar os programas pre-requisitos necessarios para instalar os outros programas.
+    Instala os programas pre-requisitos necessários para instalar os outros programas
     """
     comandos = \
         [
@@ -61,7 +58,7 @@ def instalar_prerequisitos():
 
 def atualizar():
     """
-    Esta funcao serve para atualizar todos os programas do sistema.
+    Atualiza todos os programas do sistema
     """
     comandos = \
         [
@@ -73,7 +70,7 @@ def atualizar():
 
 def adicionar_repositorios():
     """
-    Esta funcao serve para adicionar os repositorios do apt.
+    Adiciona os repositórios do apt
     """
     comandos = \
         [
@@ -93,7 +90,7 @@ def adicionar_repositorios():
 
 def instalar_programas_deb():
     """
-    Esta funcao serve para baixar e instalar os arquivos .deb.
+    Baixa e instala os arquivos .deb
     """
 
     comandos = \
@@ -101,24 +98,52 @@ def instalar_programas_deb():
             # Baixando
 
             # Minecraft: Não será baixado e nem instalado
-            #"wget https://launcher.mojang.com/download/Minecraft.deb;",
+            "wget https://launcher.mojang.com/download/Minecraft.deb;",
 
             # Veracrypt
             "wget https://launchpad.net/veracrypt/trunk/1.24-update7/+download/veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb;",
 
-            # .NET Core SDK
-            "wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb;",
+            # Instalando programas
+            "sudo apt install ./veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb ./Minecraft.deb -y;",
 
-            "sudo apt install ./packages-microsoft-prod.deb ./veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb -y;"
+            # Movendo instaladores para a lixeira
+            "gio trash ./packages-microsoft-prod.deb",
+            "gio trash ./veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb",
+            "gio trash ./Minecraft.deb"
         ]
     executar_comandos_shell(comandos)
 
 
+def instalar_dot_net_sdk():
+    """
+    Baixa e instala o .NET SDK
+    """
+
+    comandos = \
+        [
+            # Adicionando a chave de assinatura da Microsoft
+            "wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb;",
+            "sudo apt install ./packages-microsoft-prod.deb -y;",
+
+            # Atualizando a lista de repositórios
+            "sudo apt update;",
+
+            # Instalando pre-requisito
+            "sudo apt install apt-transport-https -y;",
+
+            # Atualizando a lista de repositórios
+            "sudo apt update;",
+
+            # Instalando o .NET SDK
+            "sudo apt install dotnet-sdk-5.0 aspnetcore-runtime-5.0 dotnet-runtime-5.0 -y;"
+        ]
+
+    executar_comandos_shell(comandos)
 
 
 def instalar_drivers():
     """
-    Esta funcao serve para instalar os drivers do Ubuntu.
+    Instala os drivers do Ubuntu
     """
     comandos = \
         [
@@ -129,13 +154,14 @@ def instalar_drivers():
 
 def instalar_programas_apt():
     """
-    Esta funcao serve para instalar os programas por meio do apt.s
+    Instala os programas por meio do apt
     """
 
     programas_apt = [
 
         # Ferramentas do sistema
         "gufw",  # Firewall
+        "nemo",  # Gerenciador de Arquivos
 
         # Ferramentas de desenvolvimento
         "python3",
@@ -157,11 +183,17 @@ def instalar_programas_apt():
         "gradle",
         "git-gui",
         "openjdk-11-jdk",
+        "openjdk-8-jdk",
         "ca-certificates-java",
+        "golang",
+        "python",
+
+        # Cinnamon Deskop
+        "cinnamon-core",
 
         # VirtualBox
         "virtualbox",
-        #"virtualbox-ext-pack",
+        # "virtualbox-ext-pack",
         "virtualbox-guest-additions-iso",
 
         # Google Chrome
@@ -195,11 +227,18 @@ def instalar_programas_apt():
         "obs-studio",
         "gpa",
         "logisim",
+        "stacer",
 
         # VPN
         "openvpn",
         "network-manager-openvpn-gnome",
         "resolvconf",
+
+        # Suporte a KVM no Android Studio
+        "qemu-kvm",
+        "libvirt-daemon-system",
+        "libvirt-clients",
+        "bridge-utils",
 
         # Utilitários do sistema
         "blueman",
@@ -229,7 +268,7 @@ def instalar_programas_apt():
 
 def instalar_flathub():
     """
-    Esta funcao serve para instalar o flathub.
+    Instala o flathub
     """
     comandos = \
         [
@@ -240,7 +279,7 @@ def instalar_flathub():
 
 def instalar_programas_snap():
     """
-    Esta funcao serve para instalar os programas por meio do snap.
+    Instala os programas por meio do snap
     """
     comandos = \
         [
@@ -251,14 +290,15 @@ def instalar_programas_snap():
             "sudo snap install code --classic;",
             "sudo snap install --devmode keepassxc;",
             "sudo snap install --classic android-studio;",
-            "sudo snap install pycharm-community --classic;"
+            "sudo snap install pycharm-community --classic;",
+            "sudo snap install clion --classic;"
         ]
     executar_comandos_shell(comandos)
 
 
 def instalar_programas_pip():
     """
-    Esta funcao serve para instalar os programas por meio do pip.
+    Instala os programas por meio do pip
     """
     comandos = \
         [
@@ -267,45 +307,9 @@ def instalar_programas_pip():
     executar_comandos_shell(comandos)
 
 
-def instalar_go_lang():
-    """
-    Esta funcao serve para instalar o compilador da linguagem Go.
-    """
-
-    # Verificando se o diretorio go existe na pasta /usr/local
-    if os.path.isdir("/usr/local/go"):
-        executar_comando_shell_sem_erro("sudo rm -rf /usr/local/go")
-
-    # Verificando se a pasta go existe no diretorio atual
-    if os.path.isdir("./go"):
-        executar_comando_shell_sem_erro("sudo rm -rf ./go")
-
-    # Instalando o Go
-    comandos = \
-        [
-            "curl -L -O https://dl.google.com/go/go1.15.3.linux-amd64.tar.gz;",
-            "tar -xvzf go1.15.3.linux-amd64.tar.gz;",
-            "sudo chown -R root:root ./go;",
-            "sudo mv go /usr/local;"
-        ]
-    executar_comandos_shell(comandos)
-
-    # Adicionando o Go ao arquivo profile
-    home = expanduser("~")
-    with open(home + "/.profile") as profile:
-        if not "GOPATH" in profile:
-            executar_comando_shell_sem_erro("echo \"export GOPATH=$HOME/go\" |tee --append ~/.profile;")
-
-        for linha in profile:
-            if re.search("export PATH=|(?=:/usr/local/go/bin:)|(?=:/go/bin).*?", linha) is None:
-                executar_comando_shell_sem_erro(
-                    "echo \"export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin\" |tee --append ~/.profile;")
-                break
-
-
 def instalar_rust_lang():
     """
-    Esta funcao serve para instalar o compilador da linguagem Rust.
+    Instala o compilador da linguagem Rust
     """
     comandos = \
         [
@@ -316,7 +320,7 @@ def instalar_rust_lang():
 
 def instalar_logisim():
     """
-    Esta funcao serve para instalar o Logisim.
+    Instala o Logisim
     """
     comandos = \
         [
@@ -329,7 +333,7 @@ def instalar_logisim():
 
 def instalar_youtube_dl():
     """
-    Esta funcao serve para instalar o Youtube-dl.
+    Instala o Youtube-dl
     """
     comandos = \
         [
@@ -342,7 +346,7 @@ def instalar_youtube_dl():
 
 def desinstalar_programas_inuteis():
     """
-    Esta funcao serve para desinstalar programas inuteis.
+    Desinstala programas inúteis
     """
 
     programas_inuteis = [
@@ -364,9 +368,7 @@ def desinstalar_programas_inuteis():
         "tali",
         "gnome-taquin",
         "gnome-tetravex",
-        "gnome-chess",
-        "browser-plugin-freshplayer-pepperflash",
-        "flashplugin-installer"
+        "gnome-chess"
     ]
 
     comando_remover_programas_inuteis = "sudo apt autoremove "
@@ -382,22 +384,9 @@ def desinstalar_programas_inuteis():
     executar_comandos_shell(comandos)
 
 
-def configurar_atualizacoes_automaticas():
-    """
-    Esta funcao serve para configurar atualizacoes automaticas no sistema.
-    """
-    comandos = \
-        [
-            "sudo mv /etc/apt/apt.conf.d/50unattended-upgrades ~/50unattended-upgrades.old;",
-            "sudo chmod 666 ~/50unattended-upgrades.old;",
-            "sudo cp ./50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades;"
-        ]
-    executar_comandos_shell(comandos)
-
-
 def configurar_visual_studio_code():
     """
-    Esta funcao serve para configurar o Visual Studio Code.
+    Configurar o Visual Studio Code
     """
     comandos = \
         [
@@ -410,11 +399,11 @@ def configurar_visual_studio_code():
 
 def instalar_extensoes_visual_studio_code():
     """
-    Esta funcao serve para instalar as extensoes do Visual Studio Code.
+    Instala as extensões do Visual Studio Code
     """
     comandos = \
         [
-            # Traducao do VS Code em Portugues
+            # Tradução do VS Code em Português
             "code --install-extension ms-ceintl.vscode-language-pack-pt-br;",
 
             # Linguagem C/C++
@@ -422,7 +411,7 @@ def instalar_extensoes_visual_studio_code():
             "code --install-extension ms-vscode.cmake-tools;",
             "code --install-extension austin.code-gnu-global;",
 
-            # Lingugagem C#
+            # Linguagem C#
             "code --install-extension ms-dotnettools.csharp;",
 
             # Linguagem Java
@@ -456,7 +445,7 @@ def instalar_extensoes_visual_studio_code():
             # Powershell
             "code --install-extension ms-vscode.PowerShell;",
 
-            # Indentacao de codigo
+            # Indentação de código
             "code --install-extension NathanRidley.autotrim;",
             "code --install-extension esbenp.prettier-vscode;",
 
@@ -468,29 +457,35 @@ def instalar_extensoes_visual_studio_code():
 
 def configurar_alias():
     """
-    Esta funcao serve para configurar os alias.
+    Configura os alias
     """
     comandos = \
         [
-            "echo \"alias update='sudo apt update && sudo apt full-upgrade -y && sudo snap refresh && flatpak update -y &&  sudo ubuntu-drivers autoinstall && sudo do-release-upgrade'\" | tee --append ~/.bashrc;",
-            "echo \"alias reload-sound='sudo apt update;sudo apt full-upgrade -y;sudo apt install --reinstall alsa-base alsa-utils alsa-tools-gui alsa-topology-conf alsa-ucm-conf bluedevil gir1.2-cvc-1.0 gir1.2-rb-3.0 gstreamer1.0-libav gstreamer1.0-nice gstreamer1.0-packagekit gstreamer1.0-pulseaudio indicator-sound libao-common libao4 libasound2-plugins libbasicusageenvironment1 libcanberra-pulse libkf5pulseaudioqt2 libpulse-mainloop-glib0 libpulse0 libpulsedsp lightdm linux-image-`uname -r` linux-sound-base pavucontrol pulseaudio pulseaudio-equalizer pulseaudio-module-bluetooth pulseaudio-module-jack pulseaudio-module-lirc pulseaudio-module-raop pulseaudio-module-zeroconf pulseaudio-utils python3-libdiscid speech-dispatcher-audio-plugins ubuntu-desktop ubuntu-sounds -y;sudo bash ./Fix_Bluetooth.sh;killall pulseaudio;rm -r ~/.pulse*;ubuntu-support-status;sudo usermod -aG `cat /etc/group | grep -e '^pulse:' -e '^audio:' -e '^pulse-access:' -e '^pulse-rt:' -e '^video:' | awk -F: '{print $1}' | tr '\n' ',' | sed 's:,$::g'` `whoami`;sudo pulseaudio -k;sudo alsa force-reload;'\" | tee --append ~/.bashrc;"
+            "echo \"alias update='sudo apt update && sudo apt full-upgrade -y && sudo snap refresh && flatpak update -y &&  sudo do-release-upgrade'\" | tee --append ~/.bashrc;",
+            "echo \"alias reload-sound='sudo apt update;sudo apt full-upgrade -y;sudo apt install --reinstall alsa-base alsa-utils alsa-tools-gui alsa-topology-conf alsa-ucm-conf bluedevil gir1.2-cvc-1.0 gir1.2-rb-3.0 gstreamer1.0-libav gstreamer1.0-nice gstreamer1.0-packagekit gstreamer1.0-pulseaudio indicator-sound libao-common libao4 libasound2-plugins libbasicusageenvironment1 libcanberra-pulse libkf5pulseaudioqt2 libpulse-mainloop-glib0 libpulse0 libpulsedsp lightdm linux-image-`uname -r` linux-sound-base pavucontrol pulseaudio pulseaudio-equalizer pulseaudio-module-bluetooth pulseaudio-module-jack pulseaudio-module-lirc pulseaudio-module-raop pulseaudio-module-zeroconf pulseaudio-utils python3-libdiscid speech-dispatcher-audio-plugins ubuntu-desktop ubuntu-sounds -y;sudo bash ./Fix_Bluetooth.sh;killall pulseaudio;rm -r ~/.pulse*;ubuntu-support-status;sudo usermod -aG `cat /etc/group | grep -e '^pulse:' -e '^audio:' -e '^pulse-access:' -e '^pulse-rt:' -e '^video:' | awk -F: '{print $1}' | tr '\n' ',' | sed 's:,$::g'` `whoami`;sudo pulseaudio -k;sudo alsa force-reload;'\" | tee --append ~/.bashrc;",
+            "echo \"alias java8='/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java'\" | tee --append ~/.bashrc;",
+            "echo \"alias java11='/usr/lib/jvm/java-11-openjdk-amd64/bin/java'\" | tee --append ~/.bashrc;",
+            "echo \"alias javac8='/usr/lib/jvm/java-8-openjdk-amd64/bin/javac'\" | tee --append ~/.bashrc;",
+            "echo \"alias javac11='/usr/lib/jvm/java-11-openjdk-amd64/bin/javac'\" | tee --append ~/.bashrc;",
         ]
     executar_comandos_shell(comandos)
 
 
 def main():
-
+    """
+    Função principal
+    """
     parte = 0
-    total = 17
+    total = 16
 
-    # Alterando o mirror do ubuntu
+    # Verificando versão do sistema operacional
     parte += 1
-    print("(", parte, "/", total, ")", "Alterando o mirror do Ubuntu")
-    alterar_mirror()
+    print("(", parte, "/", total, ")", "Verificando versão do sistema operacional")
+    verificar_versao_sistema_operacional()
 
-    # Instalando prérequisitos
+    # Instalando pré-requisitos
     parte += 1
-    print("(", parte, "/", total, ")", "Instalando os softwares prerequisitos")
+    print("(", parte, "/", total, ")", "Instalando os softwares pre-requisitos")
     instalar_prerequisitos()
 
     # Atualizando o sistema
@@ -506,7 +501,7 @@ def main():
 
     # Atualizando as listas de repositórios
     parte += 1
-    print("(", parte, "/", total, ")", "Atualizando a lista de repositorios")
+    print("(", parte, "/", total, ")", "Atualizando a lista de repositórios")
     atualizar()
 
     # Obtendo automaticamente os novos drivers
@@ -516,12 +511,12 @@ def main():
 
     # Baixando e Instalando os pacotes apt
     parte += 1
-    print("(", parte, "/", total, ")", "Instalando os pacotes pelo grenciador de pacotes APT")
+    print("(", parte, "/", total, ")", "Instalando os pacotes pelo gerenciador de pacotes APT")
     instalar_programas_apt()
 
     # Instalando o flathub
     parte += 1
-    print("(", parte, "/", total, ")", "Instalando o repositorio flathub")
+    print("(", parte, "/", total, ")", "Instalando o repositório flathub")
     instalar_flathub()
 
     # Baixando e Instalando os pacotes snap
@@ -536,29 +531,28 @@ def main():
 
     # Instalando o compilador de Rust Lang e Go Lang
     parte += 1
-    print("(", parte, "/", total, ")", "Instalando o compilador de Rust Lang e Go Lang")
-    instalar_go_lang()
+    print("(", parte, "/", total, ")", "Instalando o compilador de Rust Lang")
     instalar_rust_lang()
+
+    # Instalando o .NET SDK
+    parte += 1
+    print("(", parte, "/", total, ")", "Instalando o .NET SDK")
+    instalar_dot_net_sdk()
 
     # Instalando o logisim
     parte += 1
     print("(", parte, "/", total, ")", "Instalando o Logisim")
     instalar_logisim()
 
-    # Instalando a ultima versao do Youtube-dl
+    # Instalando a ultima versão do Youtube-dl
     parte += 1
-    print("(", parte, "/", total, ")", "Instalando a ultima versao do Youtube-dl")
+    print("(", parte, "/", total, ")", "Instalando a ultima versão do Youtube-dl")
     instalar_youtube_dl()
 
-    # Removendo programas inuteis
+    # Removendo programas inúteis
     parte += 1
-    print("(", parte, "/", total, ")", "Desinstalando programas inuteis")
+    print("(", parte, "/", total, ")", "Desinstalando programas inúteis")
     desinstalar_programas_inuteis()
-
-    # Configurando atualizacoes automaticas
-    parte += 1
-    print("(", parte, "/", total, ")", "Configurando atualizacoes automaticas")
-    configurar_atualizacoes_automaticas()
 
     # Configurando o Visual Studio Code
     parte += 1
@@ -572,7 +566,7 @@ def main():
     configurar_alias()
 
     # Saindo do terminal
-    print("Instalacao concluida!")
+    print("Instalação concluída!")
 
 
 if __name__ == "__main__":
